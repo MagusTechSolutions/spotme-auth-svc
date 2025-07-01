@@ -22,15 +22,7 @@ pipeline{
 
         stage("Build"){
             steps{
-               dir("./"){
-                sh '''
-                npm install
-                npm install @ionic/cli
-                npm install axios
-                ionic build
-                tar -czvf ${appName}-archive.tar.gz dist
-                '''
-               }
+                sh ''' mvn clean install -ntp -Dmaven.test.skip '''
             }
         }
         stage("Test"){
