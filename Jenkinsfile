@@ -89,11 +89,12 @@ pipeline{
         stage('SonarQube Analysis') {
             steps {
                 script {
-                    dir("spotme-rest/"){
+                    dir("./"){
                         def mvn = tool 'maven';
                         try{
                         withSonarQubeEnv() {
-                            sh "${mvn}/bin/mvn clean verify sonar:sonar -Dsonar.projectKey=spotme -Dsonar.projectName='spotme'"
+                            sh "${mvn}/bin/mvn clean verify sonar:sonar -Dsonar.projectKey=spotme-auth-svc -Dsonar.projectName='spotme-auth-svc
+'"
                         }}catch (e){
                             println "Sonar Analysis could not operate"
                         }
