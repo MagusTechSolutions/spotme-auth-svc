@@ -23,16 +23,31 @@ pipeline{
 
         stage("Build"){
             steps{
-                sh ''' mvn clean install -ntp -Dmaven.test.skip '''
+                sh ''' chmod +x mvnw '''
+                sh ''' ./mvnw clean install -ntp -Dmaven.test.skip '''
             }
         }
         stage("Test"){
             steps{
                dir("./"){
-               sh ''' echo "Fake Test" '''
+               sh ''' ./mvnw --batch-mode test '''
               }
             }
         }
+        stage('SonarQube Analysis') {
+            steps {
+                withSonarQubeEnv('Sonarqube') {
+                    sh "./mvnw clean verify sonar:sonar -Dsonar.projectKey='${appName}' -Dsonar.projectName='${appName}'"
+            }
+            }
+        }
+         stage("Quality Gate") {
+            steps {
+              timeout(time: 1, unit: 'HOURS') {
+                waitForQualityGate abortPipeline: true
+              }
+            }
+          }
         stage("Store Artifacts"){
             steps{
                archiveArtifacts artifacts: 'target/*.jar', followSymlinks: false
@@ -86,21 +101,7 @@ pipeline{
                 }
             }
         }
-        stage('SonarQube Analysis') {
-            steps {
-                script {
-                    dir("spotme-rest/"){
-                        def mvn = tool 'maven';
-                        try{
-                        withSonarQubeEnv() {
-                            sh "${mvn}/bin/mvn clean verify sonar:sonar -Dsonar.projectKey=spotme -Dsonar.projectName='spotme'"
-                        }}catch (e){
-                            println "Sonar Analysis could not operate"
-                        }
-                    }
-            }
-            }
-        }
+    
         stage("Store Pipeline Artifacts"){
             steps{
                archiveArtifacts artifacts: 'imageRef.properties', followSymlinks: false

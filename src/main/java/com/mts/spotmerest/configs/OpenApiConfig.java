@@ -34,7 +34,11 @@ public class OpenApiConfig {
                         new SecurityScheme().type(SecurityScheme.Type.HTTP).scheme("bearer").bearerFormat("JWT"));
     }
 
-    private final String devUrl = (String)System.getenv("REST_ORIGIN");
+    private final String devUrl = (String)System.getenv("DEV_URL");
+
+    private final String nodeUrl = (String)System.getenv("NODE_URL");
+
+    private final String localUrl = "http:localhost:8081";
 
     @Value("https://rest.spot-me-app.com")
     private String prodUrl;
@@ -45,8 +49,12 @@ public class OpenApiConfig {
         devServer.setUrl(devUrl);
         devServer.setDescription("Server URL");
 
+        Server nodeServer = new Server();
+        nodeServer.setUrl(nodeUrl);
+        nodeServer.setDescription("Node URL");
+
         Server localServer = new Server();
-        localServer.setUrl("http://localhost:8080");
+        localServer.setUrl(localUrl);
         localServer.setDescription("Local URL");
 
         Contact contact = new Contact();
@@ -61,6 +69,6 @@ public class OpenApiConfig {
                 .description("This API exposes endpoints to manage tutorials.").termsOfService("https://www.bezkoder.com/terms");
 
 
-        return new OpenAPI().info(info).servers(List.of(devServer,localServer));
+        return new OpenAPI().info(info).servers(List.of(devServer,nodeServer,localServer));
     }
 }
