@@ -38,6 +38,7 @@ pipeline{
                 withSonarQubeEnv('My SonarQube Server') {
                     sh "mvn clean verify sonar:sonar -Dsonar.projectKey='spotme-auth-svc' -Dsonar.projectName='spotme-auth-svc'"
             }
+            }
         }
          stage("Quality Gate") {
             steps {
