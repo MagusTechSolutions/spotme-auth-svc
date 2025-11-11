@@ -45,7 +45,7 @@ springdoc:
 spotme:
   openapi:
     dev-url: ${DEV_URL}
-    local: http://localhost:8080
+    local: http://localhost:${SERVER_PORT}
     origin: ${REST_ORIGIN}
     prod-url: ${PROD_URL}
     uiorigin: ${UI_ORIGIN}
