@@ -50,6 +50,7 @@ pipeline{
             steps{
                archiveArtifacts artifacts: 'target/*.jar', followSymlinks: false
             }
+        }
   
 
         stage("Image Upload"){
@@ -97,8 +98,8 @@ pipeline{
                archiveArtifacts artifacts: 'pipeline.properties', followSymlinks: false
             }
         }
-
-    }
+    }   
+    
     post {
            always{
                 cleanWs()
