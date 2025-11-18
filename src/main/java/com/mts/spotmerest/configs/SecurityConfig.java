@@ -1,11 +1,10 @@
 package com.mts.spotmerest.configs;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.env.Environment;
 import org.springframework.security.authentication.AuthenticationProvider;
-import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -24,24 +23,26 @@ public class SecurityConfig {
 
     private final JwtAuthenticationFilter jwtAuthFilter;
     private final AuthenticationProvider authenticationProvider;
-    private Environment env;
-//
-//    @Value("${origin}")
-//    private String devUrl;
 
+    @Value("${spotme.env-props.origin}")
+    private String originUrl;
 
-    private String originUrl= System.getenv("REST_ORIGIN");
+    @Value("${spotme.env-props.origin}")
+    private String baseOriginUrl;
 
-    private String uiURL= System.getenv("UI_ORIGIN");
+    @Value("${spotme.env-props.origin}")
+    private String uiURL;
 
-    private String gateWayURL= System.getenv("GATE_WAY_URL");
+    @Value("${spotme.env-props.gateway-url}")
+    private String gateWayURL;
 
-    private String nodeURL= System.getenv("NODE_URL");
+    @Value("${spotme.env-props.node-url}")
+    private String nodeURL;
 
     private static final String[] AUTH_WHITE_LIST = {
             "/swagger-ui/index.html",
             "/api/v1/auth/**",
-            "/v3/api-docs/**",
+            "/v3/**",
             "/api/v3/api-docs/**",
             "/swagger-ui/**",
             "/api-docs/**",
@@ -51,8 +52,18 @@ public class SecurityConfig {
             "/bus/v3/api-docs/**",
             "/api/v1/info",
             "/h2-console/**",
+            "/actuator/info",
+            "/actuator/health",
             "/actuator/**",
-            "/auth-docs**"
+            "/swagger**",
+            "/rest/**",
+            "/rest-docs/**",
+            "/swagger-ui-custom.html**",
+            "/swagger-ui/**",
+            "/openapi/**",
+            "/swagger-ui.html",
+            "/webjars/**",
+            "/v3/api-docs/**" 
     };
 
 //    @Bean
@@ -81,7 +92,9 @@ public class SecurityConfig {
     CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration corsConfiguration = new CorsConfiguration();
         corsConfiguration.setAllowCredentials(true);
-        corsConfiguration.setAllowedOrigins(Arrays.asList("http://localhost:8100","*","http://localhost:8083",gateWayURL,"http://localhost:8081","http://localhost:5173","http://localhost:3000",originUrl,nodeURL,nodeURL+":[*]","https://rest.spot-me-app.com/",uiURL,"https://ui.spot-me-app.com/"));
+        corsConfiguration.addAllowedOrigin("*");
+        corsConfiguration.addAllowedHeader("*");
+        // corsConfiguration.setAllowedOrigins(Arrays.asList("http://localhost:8100","mkp**",baseOriginUrl,"http://localhost:8083",gateWayURL,"http://localhost:8081","http://localhost:5173","http://localhost:3000","http://localhost:8080","http://localhost:8087",originUrl,nodeURL,nodeURL+":[*]","https://rest.spot-me-app.com/",uiURL,"https://ui.spot-me-app.com/"));
         corsConfiguration.setAllowedHeaders(Arrays.asList("*"));
         corsConfiguration.setAllowedMethods(Arrays.asList("*"));
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();

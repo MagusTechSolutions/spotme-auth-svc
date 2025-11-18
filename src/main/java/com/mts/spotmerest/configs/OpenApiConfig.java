@@ -5,46 +5,47 @@ import io.swagger.v3.oas.annotations.enums.SecuritySchemeType;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.models.servers.Server;
 import io.swagger.v3.oas.models.security.SecurityScheme;
-import org.springdoc.core.customizers.OpenApiCustomiser;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-
 import org.springframework.beans.factory.annotation.Value;
-
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-
+import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Contact;
 import io.swagger.v3.oas.models.info.Info;
-import io.swagger.v3.oas.models.info.License;
-import io.swagger.v3.oas.models.servers.Server;
 
 import java.util.List;
 
 
 @Configuration
 @OpenAPIDefinition(security = {@SecurityRequirement(name = "bearer-key")})
-public class OpenApiConfig {
+public class OpenAPIConfig {
 
-    @Bean
-    public OpenApiCustomiser customerGlobalHeaderOpenApiCustomiser() {
-        return openApi -> openApi.getComponents()
-                .addSecuritySchemes("bearer-key",
-                        new SecurityScheme().type(SecurityScheme.Type.HTTP).scheme("bearer").bearerFormat("JWT"));
-    }
+    @Value("${spotme.env-props.dev-url}")
+    private String devUrl;
 
-    private final String devUrl = (String)System.getenv("DEV_URL");
+    @Value("${spotme.env-props.node-url}")
+    private String nodeUrl;
 
-    private final String nodeUrl = (String)System.getenv("NODE_URL");
+    @Value("${spotme.env-props.gateway-url}")
+    private String gatewayURL;
 
-    private final String localUrl = "http:localhost:8081";
+    @Value("${spotme.env-props.gateway-path}")
+    private String gatewayPath;
 
-    @Value("https://rest.spot-me-app.com")
+    @Value("${spotme.env-props.dev-url}")
+    private String localUrl;
+
+    @Value("${spotme.env-props.prod-url}")
     private String prodUrl;
 
     @Bean
     public OpenAPI myOpenAPI() {
+        
+        Server gatewayServer = new Server();
+        String gatewayServerUrl= gatewayURL + gatewayPath.toString();
+        gatewayServer.setUrl(gatewayServerUrl);
+        gatewayServer.setDescription("Gateway URL");
+
         Server devServer = new Server();
         devServer.setUrl(devUrl);
         devServer.setDescription("Server URL");
@@ -64,11 +65,16 @@ public class OpenApiConfig {
 
         Info info = new Info()
                 .title("SpotMe Authentication Service API")
-                .version("1.0")
+                .version("3.0")
                 .contact(contact)
                 .description("This API exposes endpoints to manage tutorials.").termsOfService("https://www.bezkoder.com/terms");
 
 
-        return new OpenAPI().info(info).servers(List.of(devServer,nodeServer,localServer));
+        return new OpenAPI().components(new Components()
+                    .addSecuritySchemes("bearer-key",
+                            new SecurityScheme()
+                                    .type(SecurityScheme.Type.HTTP)
+                                    .scheme("bearer")
+                                    .bearerFormat("JWT"))).info(info).servers(List.of(gatewayServer,devServer,nodeServer,localServer));
     }
 }
