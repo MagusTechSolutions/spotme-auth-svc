@@ -50,7 +50,7 @@ spotme:
     prod-url: ${PROD_URL}
     uiorigin: ${UI_ORIGIN}
   env-props:
-    environment: LOCAL
+    environment: K8S
     jwt-secret-key: ${JWT_SECRET_KEY}
     dev-url: ${DEV_URL:http://localhost:8081}
     prod-url: ${PROD_URL:https://rest.spot-me-app.com}
