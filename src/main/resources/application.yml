@@ -62,7 +62,7 @@ spotme:
   
 
 server:
-  port: ${SERVER_PORT}
+  port: ${SERVER_PORT:8081}
 
 
 # Local
