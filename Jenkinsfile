@@ -59,7 +59,7 @@ pipeline{
                     dir("./"){
                         try{
                             echo 'Tunnel URL did not work for image push, trying to push via intranet'
-                            docker.withRegistry(localRegistryUrl,'spotme-containerregistry') {
+                            docker.withRegistry(localRegistryUrl,'scorepal-jcr-creds') {
 
                                 def smweb_l = docker.build("spotme/${appName}:${s_branch}","./")
 
@@ -72,7 +72,7 @@ pipeline{
                                 sh "echo IMAGE_NAME=${remoteImage} >> imageRef.properties"
                             }
                         }catch(e){
-                            docker.withRegistry(registryUrl,'spotme-containerregistry') {
+                            docker.withRegistry(registryUrl,'scorepal-jcr-creds') {
                                 // sh "docker system prune -a -f"
 
                                 def smweb = docker.build("spotme/${appName}:${s_branch}","./")
