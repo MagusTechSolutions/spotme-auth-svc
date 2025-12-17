@@ -1,15 +1,15 @@
-spinnaker_app: scorepal-auth-service
-app: scorepal-auth-svc
+app: spotme-auth-svc
 sonar: true
-project: scorepal
+project: spotme
 
 docker:
-  credsId: scorepal-jcr-creds
+  credsId: spotme-rest-jwt-jenkins
 
 artifacts:
   - 'target/*.jar'
   - 'imageRef.properties'
   - 'pipeline.properties'
+spinnaker_app: spotme-auth-svc
 
 environments:
   - name: feature/
