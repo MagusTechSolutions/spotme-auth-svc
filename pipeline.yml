@@ -1,9 +1,10 @@
+
 app: spotme-auth-svc
 sonar: true
 project: spotme
 
 docker:
-  credsId: spotme-rest-jwt-jenkins
+  credsId: spotme-containerregistry
 
 artifacts:
   - 'target/*.jar'

@@ -9,6 +9,6 @@ library identifier: 'buildJava@master',
 
 buildJava(
     configFile: 'pipeline.yml',
-    jwtCredsId: 'scorepal-rest-jwt-jenkins',
+    jwtCredsId: 'spotme-rest-jwt-jenkins',
     sonarCredsId: 'Sonarqube'
 )
