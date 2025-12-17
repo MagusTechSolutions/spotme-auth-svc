@@ -1,0 +1,34 @@
+spinnaker_app: scorepal-auth-service
+app: scorepal-auth-svc
+sonar: true
+project: scorepal
+
+docker:
+  credsId: scorepal-jcr-creds
+
+artifacts:
+  - 'target/*.jar'
+  - 'imageRef.properties'
+  - 'pipeline.properties'
+
+environments:
+  - name: feature/
+    deploy: true
+    spinnaker:
+      pipeline: "deploy-dev"
+      parameters:
+        # key: "value"
+        
+  - name: develop
+    deploy: true
+    spinnaker:
+      pipeline: "deploy-dev"
+      parameters:
+        # key: "value"        
+
+  - name: master
+    deploy: true
+    spinnaker:
+      pipeline: "deploy-prod"
+      parameters:
+      # key: "value"
